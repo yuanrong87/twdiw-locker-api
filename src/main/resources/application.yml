@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    ROOT: INFO
+    org.hibernate.SQL: INFO
+    tw.com.demo: INFO
+
+springdoc:
+  swagger-ui.path: /swagger-ui.html
+
+# H2 Database Configuration
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate: 
+        format_sql: true
+    defer-datasource-initialization: false
+
+  # SQL 初始化設定
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+
+  # H2 Console Configuration (可選，用於網頁管理介面)
+  h2:
+    console:
+     enabled: true
+     path: /h2-console
+    settings: 
+      web-allow-others: true
+      trace: false
+
+# cors允許清單
+cors:
+  allowedOrigins: 'http://127.0.0.1:5500, https://127.0.0.1:5500, http://127.0.0.1:8081, https://127.0.0.1:8081, http://localhost:8080'
