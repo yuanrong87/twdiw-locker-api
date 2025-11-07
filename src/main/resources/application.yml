@@ -20,7 +20,6 @@ spring:
 
   # JPA Configuration
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: none
     show-sql: true
@@ -45,6 +44,12 @@ spring:
       web-allow-others: true
       trace: false
 
+  # security 設定
+  security:
+      user:
+        name: ${SPRING_SECURITY_USER_NAME:admin}
+        password: ${SPRING_SECURITY_USER_PASSWORD:cht#1qaz@WSX3edc}
+
 # cors允許清單
 cors:
   allowedOrigins: 'http://127.0.0.1:5500, https://127.0.0.1:5500, http://127.0.0.1:8081, https://127.0.0.1:8081, http://localhost:8080'
@@ -56,3 +61,20 @@ mqtt:
   password: 
   topic-control: locker/control
   topic-status: locker/status
+
+# 發行端服務
+issuer:
+  data:
+    accessToken: ${ISSUER_DATA_ACCESSTOKEN:rTBOAEG17jM1ZvjeoRgvTWNLy21uG4Vf}
+  server:
+    url:
+      base: ${ISSUER_SERVER_URL_BASE:https://issuer-sandbox.wallet.gov.tw}
+
+# 驗證端服務
+verifier:
+  data:
+    accessToken: ${VERIFIER_DATA_ACCESSTOKEN:jWiYoGZN8axBZ3vhkqCVpaaTFFuXYHKf}
+    ref: ${VERIFIER_DATA_REF:00000000_verify_locker}
+  server:
+    url:
+      base: ${VERIFIER_SERVER_URL_BASE:https://verifier-sandbox.wallet.gov.tw}

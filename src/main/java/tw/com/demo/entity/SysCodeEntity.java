@@ -16,13 +16,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * lockers (櫃子檔)
+ * sys_code (系統管理檔)
  */
 @Entity
-@Table(name = "lockers")
+@Table(name = "sys_code")
 @Getter
 @Setter
-public class LockersEntity {
+public class SysCodeEntity {
 
     /**
      * 主建值
@@ -33,20 +33,36 @@ public class LockersEntity {
     private Long id;
 
     /**
-     * 置物櫃編號
+     * 群組名稱
      */
     @NotNull
-    @Size(max = 10)
-    @Column(name = "locker_no", nullable = false)
-    private String lockerNo;
+    @Size(max = 100)
+    @Column(name = "group_name", nullable = false)
+    private String groupName;
 
     /**
-     * 據點
+     * sys_key
      */
     @NotNull
-    @Size(max = 2)
-    @Column(name = "location", nullable = false)
-    private String location;
+    @Size(max = 100)
+    @Column(name = "sys_key", nullable = false)
+    private String sysKey;
+
+    /**
+     * sys_value
+     */
+    @NotNull
+    @Size(max = 100)
+    @Column(name = "sys_value", nullable = false)
+    private String sysValue;
+
+    /**
+     * 備註
+     */
+    @NotNull
+    @Size(max = 255)
+    @Column(name = "memo", nullable = false)
+    private String memo;
 
     /**
      * 是否可使用
@@ -62,20 +78,9 @@ public class LockersEntity {
     @Column(name = "create_time", nullable = false)
     private LocalDateTime createTime;
 
-    /**
-     * 更新時間
-     */
-    @Column(name = "update_time")
-    private LocalDateTime updateTime;
-
     @PrePersist
     protected void onCreate() {
         createTime = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updateTime = LocalDateTime.now();
     }
 
 }
