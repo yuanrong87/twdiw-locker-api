@@ -14,5 +14,20 @@ public class AppConfig {
 
     @Value("${cors.allowedOrigins}")
     private String corsAllowedOrigins;
+    
+    @Value("${mqtt.broker}")
+    private String broker;
+    
+    @Value("${mqtt.username}")
+    private String username;
+    
+    @Value("${mqtt.password}")
+    private String password;
+    
+    @Value("${mqtt.topic-control}")
+    private String topicControl;
+    
+    @Value("${mqtt.topic-status}")
+    private String topicStatus;
 
 }
