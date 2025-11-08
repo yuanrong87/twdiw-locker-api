@@ -17,7 +17,6 @@ import tw.com.demo.dto.base.BaseResponse;
 import tw.com.demo.outbound.dto.ApiQrcodeDataRequest;
 import tw.com.demo.outbound.dto.ApiQrcodeDataResponse;
 import tw.com.demo.service.IssuerService;
-import tw.com.demo.service.VerifierService;
 
 /**
  * 測試相關 接口層

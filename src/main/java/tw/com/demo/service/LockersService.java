@@ -46,6 +46,8 @@ public class LockersService {
     private final OrderRepository orderRepository;
 
     private final VerifierService verifierService;
+    
+    private final MqttService mqttService;
 
     /**
      * 取得櫃子狀態
@@ -116,6 +118,9 @@ public class LockersService {
         ordersEntity.setPayment(request.getPayment());
         ordersEntity.setStatus(itemType.getCode());
         orderRepository.save(ordersEntity);
+        
+        // 開置物櫃
+        mqttService.open(lockersResult.getLockerNo());
     }
 
     /**
