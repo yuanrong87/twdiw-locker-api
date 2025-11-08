@@ -94,12 +94,12 @@ public class LockersService {
         LockersEntity lockers = lockersOpt.get();
 
         // 檢核 置物櫃是否可使用
-        if (Boolean.FALSE.equals(lockers.getIsActive())) {
+        if (Boolean.TRUE.equals(lockers.getIsActive())) {
             throw new CustomException(ReturnCodeType.LOCKER_IS_NOT_ACTIVE);
         }
 
         // 修改 置物櫃為已使用
-        lockers.setIsActive(false);
+        lockers.setIsActive(true);
         lockers.setUpdateTime(LocalDateTime.now());
         LockersEntity lockersResult = lockersRepository.save(lockers);
 
