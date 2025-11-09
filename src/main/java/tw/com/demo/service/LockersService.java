@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,8 @@ import tw.com.demo.dto.GetLockersQrcodeInfoResponse.VerifyResultDataClaimsDto;
 import tw.com.demo.dto.GetLockersQrcodeInfoResponse.VerifyResultDataDto;
 import tw.com.demo.dto.GetLockersQrcodeResponse;
 import tw.com.demo.dto.HandleLockersOperationRequest;
+import tw.com.demo.dto.HandleLockersPickupRequest;
+import tw.com.demo.dto.HandleLockersPickupResponse;
 import tw.com.demo.entity.LockersEntity;
 import tw.com.demo.entity.OrdersEntity;
 import tw.com.demo.exception.CustomException;
@@ -29,10 +32,11 @@ import tw.com.demo.outbound.dto.ApiOidvpResultResponse;
 import tw.com.demo.repository.LockersRepository;
 import tw.com.demo.repository.OrderRepository;
 import tw.com.demo.type.ItemType;
+import tw.com.demo.type.OrderStatus;
 import tw.com.demo.type.ReturnCodeType;
 
 /**
- * 發行端相關 業務邏輯層
+ * 櫃子相關 業務邏輯層
  */
 @Service
 @AllArgsConstructor
@@ -46,7 +50,7 @@ public class LockersService {
     private final OrderRepository orderRepository;
 
     private final VerifierService verifierService;
-    
+
     private final MqttService mqttService;
 
     /**
@@ -79,6 +83,7 @@ public class LockersService {
      * 
      * @param request
      */
+    @Transactional
     public void handleLockersOperation(HandleLockersOperationRequest request) {
         ItemType itemType = ItemType.toItemType(request.getItem());
         // 檢核 item 是否正確
@@ -118,7 +123,7 @@ public class LockersService {
         ordersEntity.setPayment(request.getPayment());
         ordersEntity.setStatus(itemType.getCode());
         orderRepository.save(ordersEntity);
-        
+
         // 開置物櫃
         mqttService.open(lockersResult.getLockerNo());
     }
@@ -176,6 +181,63 @@ public class LockersService {
         GetLockersQrcodeInfoResponse response = new GetLockersQrcodeInfoResponse();
         response.setTransactionId(apiResult.getTransactionId());
         response.setData(dataList);
+
+        return response;
+    }
+
+    /**
+     * 取物
+     * 
+     * @param request
+     * @return
+     */
+    @Transactional
+    public HandleLockersPickupResponse handleLockersPickup(HandleLockersPickupRequest request) {
+        LocalDateTime now = LocalDateTime.now();
+
+        // 查詢 置物櫃
+        List<LockersEntity> lockers = lockersRepository.findByLocation(request.getLocation());
+        if (lockers.isEmpty()) {
+            throw new CustomException(ReturnCodeType.LOCKER_NOT_FOUND);
+        }
+
+        // 查詢 訂單
+        List<Long> lockerIds = lockers.stream().map(LockersEntity::getId).toList();
+        List<OrdersEntity> orders = orderRepository.findByReceivePhoneAndReceiveNameAndLockersIdIn(
+                request.getReceivePhone(), request.getReceiveName(), lockerIds);
+        if (orders.isEmpty()) {
+            throw new CustomException(ReturnCodeType.ORDER_NOT_FOUND);
+        }
+
+        // 更新 訂單狀態
+        orders.forEach(order -> {
+            order.setPayment(request.getPayment());
+            order.setStatus(OrderStatus.FINISH.getCode());
+            order.setUpdateTime(now);
+        });
+        orderRepository.saveAll(orders);
+
+        // 查詢 取物置物櫃
+        List<Long> pickupLockerIds = orders.stream()
+                .map(OrdersEntity::getLockersId)
+                .distinct() // 避免重複更新相同 locker
+                .toList();
+
+        // 更新 置物櫃狀態
+        List<LockersEntity> pickupLockers = lockersRepository.findByIdIn(pickupLockerIds);
+        pickupLockers.forEach(locker -> {
+            locker.setIsActive(false);
+            locker.setUpdateTime(now);
+        });
+        lockersRepository.saveAll(pickupLockers);
+
+        List<String> lockerNos = pickupLockers.stream()
+                .map(LockersEntity::getLockerNo)
+                .toList();
+
+        // 回傳結果
+        HandleLockersPickupResponse response = new HandleLockersPickupResponse();
+        response.setLockerNo(lockerNos);
 
         return response;
     }

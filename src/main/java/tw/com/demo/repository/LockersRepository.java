@@ -15,4 +15,6 @@ public interface LockersRepository extends JpaRepository<LockersEntity, Long> {
 
     Optional<LockersEntity> findByLocationAndLockerNo(String location, String lockerNo);
 
+    List<LockersEntity> findByIdIn(List<Long> id);
+
 }

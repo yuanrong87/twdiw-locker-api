@@ -17,6 +17,8 @@ import tw.com.demo.dto.GetLockersQrcodeInfoRequest;
 import tw.com.demo.dto.GetLockersQrcodeInfoResponse;
 import tw.com.demo.dto.GetLockersQrcodeResponse;
 import tw.com.demo.dto.HandleLockersOperationRequest;
+import tw.com.demo.dto.HandleLockersPickupRequest;
+import tw.com.demo.dto.HandleLockersPickupResponse;
 import tw.com.demo.dto.base.BaseResponse;
 import tw.com.demo.service.LockersService;
 
@@ -105,6 +107,25 @@ public class LockersController {
     })
     public BaseResponse<GetLockersQrcodeInfoResponse> getLockersQrcodeInfo(@Valid @RequestBody GetLockersQrcodeInfoRequest request) {
         return BaseResponse.success(lockersService.getLockersQrcodeInfo(request));
+    }
+
+    /**
+     * 取物
+     * 
+     * @param request
+     * @return
+     */
+    @PostMapping("/pickup")
+    @Operation(
+            summary = "取物",
+            description = "取物")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "取物 成功"),
+            @ApiResponse(responseCode = "401", description = "沒有權限"),
+            @ApiResponse(responseCode = "404", description = "找不到路徑")
+    })
+    public BaseResponse<HandleLockersPickupResponse> handleLockersPickup(@Valid @RequestBody HandleLockersPickupRequest request) {
+        return BaseResponse.success(lockersService.handleLockersPickup(request));
     }
 
 }

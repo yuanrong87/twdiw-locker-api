@@ -34,7 +34,7 @@ public interface VerifierAdapter {
     /**
      * 查詢 VP 展示驗證結果
      *
-     * @param transactionId
+     * @param request
      * @return
      */
     @PostMapping(value = "/api/oidvp/result", consumes = MediaType.APPLICATION_JSON_VALUE)

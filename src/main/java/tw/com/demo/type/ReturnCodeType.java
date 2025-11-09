@@ -10,6 +10,8 @@ import lombok.Getter;
 public enum ReturnCodeType {
     SUCCESS("0000", "SUCCESS"),
     ERROR_VALID("0001", "欄位檢核錯誤: "),
+    GROUP_NAME_NOT_FOUND("9989", "查無系統參數"),
+    ORDER_NOT_FOUND("9990", "查無訂單"),
     ERROR_GET_VP_RESULT("9991", "查詢 VP 展示驗證結果"),
     LOCKER_IS_NOT_ACTIVE("9992", "置物櫃使用中"),
     LOCKER_NOT_FOUND("9993", "查無置物櫃"),

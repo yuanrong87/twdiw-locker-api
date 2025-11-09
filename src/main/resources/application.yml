@@ -62,14 +62,6 @@ mqtt:
   topic-control: locker/control
   topic-status: locker/status
 
-# 發行端服務
-issuer:
-  data:
-    accessToken: ${ISSUER_DATA_ACCESSTOKEN:rTBOAEG17jM1ZvjeoRgvTWNLy21uG4Vf}
-  server:
-    url:
-      base: ${ISSUER_SERVER_URL_BASE:https://issuer-sandbox.wallet.gov.tw}
-
 # 驗證端服務
 verifier:
   data:

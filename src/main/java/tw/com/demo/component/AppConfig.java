@@ -29,9 +29,6 @@ public class AppConfig {
     
     @Value("${mqtt.topic-status}")
     private String topicStatus;
-
-    @Value("${issuer.data.accessToken}")
-    private String issuerAccessToken;
     
     @Value("${verifier.data.accessToken}")
     private String verifierAccessToken;

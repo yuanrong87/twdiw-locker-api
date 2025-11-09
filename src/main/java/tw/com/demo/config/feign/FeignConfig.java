@@ -100,11 +100,6 @@ public class FeignConfig {
             public void apply(RequestTemplate template) {
                 // 根據 api 服務需求決定使用哪種驗證方式
                 String name = template.feignTarget().name();
-                // 發行端服務
-                if (StringUtils.startsWith(name, "issuer")) {
-                    // Headers 加入 Access-Token
-                    template.header("Access-Token", appConfig.getIssuerAccessToken());
-                }
                 // 驗證端服務
                 if (StringUtils.startsWith(name, "verifier")) {
                     // Headers 加入 Access-Token
