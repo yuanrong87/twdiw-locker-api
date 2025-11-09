@@ -235,6 +235,9 @@ public class LockersService {
                 .map(LockersEntity::getLockerNo)
                 .toList();
 
+        // 開置物櫃
+        lockerNos.forEach(mqttService::open);
+
         // 回傳結果
         HandleLockersPickupResponse response = new HandleLockersPickupResponse();
         response.setLockerNo(lockerNos);
