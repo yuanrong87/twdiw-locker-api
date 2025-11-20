@@ -17,4 +17,6 @@ public interface LockersRepository extends JpaRepository<LockersEntity, Long> {
 
     List<LockersEntity> findByIdIn(List<Long> id);
 
+    List<LockersEntity> findByLocationAndIsActiveTrue(String location);
+
 }

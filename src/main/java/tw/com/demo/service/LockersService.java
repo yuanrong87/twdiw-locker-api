@@ -2,6 +2,7 @@ package tw.com.demo.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -196,15 +197,16 @@ public class LockersService {
         LocalDateTime now = LocalDateTime.now();
 
         // 查詢 置物櫃
-        List<LockersEntity> lockers = lockersRepository.findByLocation(request.getLocation());
+        List<LockersEntity> lockers = lockersRepository.findByLocationAndIsActiveTrue(request.getLocation());
         if (lockers.isEmpty()) {
             throw new CustomException(ReturnCodeType.LOCKER_NOT_FOUND);
         }
 
         // 查詢 訂單
         List<Long> lockerIds = lockers.stream().map(LockersEntity::getId).toList();
-        List<OrdersEntity> orders = orderRepository.findByReceivePhoneAndReceiveNameAndLockersIdIn(
-                request.getReceivePhone(), request.getReceiveName(), lockerIds);
+        List<String> statusList = Arrays.asList(OrderStatus.DEPOSIT.getCode(), OrderStatus.ARRIVED.getCode());
+        List<OrdersEntity> orders = orderRepository.findByReceivePhoneAndReceiveNameAndStatusInAndLockersIdIn(
+                request.getReceivePhone(), request.getReceiveName(), statusList, lockerIds);
         if (orders.isEmpty()) {
             throw new CustomException(ReturnCodeType.ORDER_NOT_FOUND);
         }

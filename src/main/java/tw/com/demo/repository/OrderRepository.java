@@ -10,7 +10,7 @@ import tw.com.demo.entity.OrdersEntity;
 @Repository
 public interface OrderRepository extends JpaRepository<OrdersEntity, Long> {
 
-    List<OrdersEntity> findByReceivePhoneAndReceiveNameAndLockersIdIn(String receivePhone, String receiveName,
-            List<Long> lockersId);
+    List<OrdersEntity> findByReceivePhoneAndReceiveNameAndStatusInAndLockersIdIn(String receivePhone,
+            String receiveName, List<String> status, List<Long> lockersId);
 
 }
