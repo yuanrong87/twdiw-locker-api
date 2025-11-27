@@ -1,6 +1,4 @@
-// ...existing code...
-
-# TWDIW Smart Locker API — 精簡說明
+# TWDIW Smart Locker API — 專案說明
 
 摘要：
 
