@@ -122,7 +122,7 @@ public class MqttService {
             msg.setQos(1);
             
             client.publish(appConfig.getTopicControl(), msg);
-            log.info("發送指令：", json);
+            log.info("發送指令：{}", json);
         } catch (Exception e) {
             log.error("發生錯誤：", e, e);
         }
