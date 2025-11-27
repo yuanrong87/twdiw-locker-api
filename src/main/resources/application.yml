@@ -48,11 +48,11 @@ spring:
   security:
       user:
         name: ${SPRING_SECURITY_USER_NAME:admin}
-        password: ${SPRING_SECURITY_USER_PASSWORD:cht#1qaz@WSX3edc}
+        password: ${SPRING_SECURITY_USER_PASSWORD:1qaz@WSX3edc}
 
 # cors允許清單
 cors:
-  allowedOrigins: 'http://127.0.0.1:5500, https://127.0.0.1:5500, http://127.0.0.1:8081, https://127.0.0.1:8081, http://localhost:8080'
+  allowedOrigins: 'http://127.0.0.1:5500, https://127.0.0.1:5500, http://127.0.0.1:8081, https://127.0.0.1:8081, http://localhost:9000'
 
 # MQTT 相關設定
 mqtt:
@@ -65,8 +65,10 @@ mqtt:
 # 驗證端服務
 verifier:
   data:
-    accessToken: ${VERIFIER_DATA_ACCESSTOKEN:jWiYoGZN8axBZ3vhkqCVpaaTFFuXYHKf}
-    ref: ${VERIFIER_DATA_REF:00000000_verify_locker}
+    # 呼叫 API 的 AccessToken
+    accessToken: ${VERIFIER_DATA_ACCESSTOKEN:}
+    # VP 模板 REF
+    ref: ${VERIFIER_DATA_REF:}
   server:
     url:
       base: ${VERIFIER_SERVER_URL_BASE:https://verifier-sandbox.wallet.gov.tw}
