@@ -1,15 +1,8 @@
 package tw.com.demo.service;
 
 import java.nio.charset.StandardCharsets;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -54,7 +47,7 @@ public class MqttService {
             MqttConnectOptions options = new MqttConnectOptions();
             options.setUserName(appConfig.getUsername());
             options.setPassword(appConfig.getPassword().toCharArray());
-            options.setSocketFactory(getInsecureSocketFactory());
+            options.setSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault());
             options.setCleanSession(true);
             
             client.setCallback(new MqttCallback() {
@@ -141,20 +134,6 @@ public class MqttService {
         } catch (Exception e) {
             log.error("重連失敗：", e, e);
         }
-    }
-    
-    private SSLSocketFactory getInsecureSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {
-        TrustManager[] trustAll = new TrustManager[] {
-                new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() { return null; }
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) {}
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) {}
-                }
-        };
-        SSLContext ctx = SSLContext.getInstance("TLS");
-        ctx.init(null, trustAll, new SecureRandom());
-        
-        return ctx.getSocketFactory();
     }
     
 }
